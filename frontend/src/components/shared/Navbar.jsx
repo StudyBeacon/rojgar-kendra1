@@ -1,8 +1,6 @@
-// frontend/src/components/shared/Navbar.jsx
-
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { AlignJustify, LogOut, UserRound, FileText } from "lucide-react";
+import { AlignJustify, LogOut, UserRound, FileText, Bell } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { setUser } from "@/redux/authSlice";
@@ -11,6 +9,8 @@ import { Button } from "../ui/button";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import logoImg from "../../assets/logoDarkBG.png";
+import Notifications from "../Notifications";
+import NotificationsBadge from "../NotificationsBadge";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -244,6 +244,21 @@ const Navbar = () => {
                       {user?.profile?.bio}
                     </p>
                   </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button style={{ position: "relative", background: "none", border: "none", cursor: "pointer" }}>
+                        <Bell />
+                        {/* Notification badge */}
+                        <NotificationsBadge />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="w-96 max-w-full">
+                      <Notifications />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div className="flex flex-col mt-5 ml-4 space-y-2">

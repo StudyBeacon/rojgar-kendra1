@@ -8,6 +8,7 @@ const companyRouter     = require("./routes/companyRoutes");
 const jobRouter         = require("./routes/jobRoutes");
 const applicationRouter = require("./routes/applicationRoutes");
 const gptRouter         = require("./routes/gptRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const globalErrorHandler = require("./controllers/errorController");
 const AppError           = require("./utils/appError");
@@ -40,6 +41,7 @@ app.use("/api/v1/user",        userRouter);
 app.use("/api/v1/company",     companyRouter);
 app.use("/api/v1/job",         jobRouter);
 app.use("/api/v1/application", applicationRouter);
+app.use("/api/notifications", notificationRoutes);
 
 // chatbot route
 app.use("/api/v1/gpt",         gptRouter);

@@ -2,6 +2,9 @@ const Application = require("../models/applicationModel")
 const Job = require("../models/jobModel")
 const catchAsync = require("../utils/catchAsync")
 const AppError = require("../utils/appError")
+const Notification = require("../models/notificationModel");
+const sendEmail = require("../utils/sendEmail");
+const User = require("../models/userModel");
 
 exports.applyJob = catchAsync(async (req, res, next) => {
   const userId = req.user.id
@@ -30,6 +33,23 @@ exports.applyJob = catchAsync(async (req, res, next) => {
 
   job.applications.push(newApplication._id)
   await job.save()
+
+  // Trigger notification to job poster
+  await Notification.create({
+    recipient: job.createdBy,
+    message: `${req.user.name} applied for your job: ${job.title}`,
+    link: `/employer/applications/${newApplication._id}`
+  });
+
+  // Send email notification to job creator
+  const recipientUser = await User.findById(job.createdBy);
+  if (recipientUser && recipientUser.email) {
+    await sendEmail({
+      to: recipientUser.email,
+      subject: "New Job Application",
+      text: `${req.user.name} applied for your job: ${job.title}`
+    });
+  }
 
   res.status(201).json({
     status: "success",
@@ -115,6 +135,26 @@ exports.updateStatus = catchAsync(async (req, res, next) => {
   await application.save({
     validateModifiedOnly: true,
   })
+
+  // Find the job for notification message
+  const job = await Job.findById(application.job);
+
+  // Trigger notification to applicant
+  await Notification.create({
+    recipient: application.applicant,
+    message: `Your application for "${job.title}" was ${status.toLowerCase()}.`,
+    link: `/applications/${application._id}`
+  });
+
+  // Send email notification to applicant
+  const applicantUser = await User.findById(application.applicant);
+  if (applicantUser && applicantUser.email) {
+    await sendEmail({
+      to: applicantUser.email,
+      subject: `Application Status Update for ${job.title}`,
+      text: `Your application for "${job.title}" was ${status.toLowerCase()}.`
+    });
+  }
 
   res.status(200).json({
     status: "success",
