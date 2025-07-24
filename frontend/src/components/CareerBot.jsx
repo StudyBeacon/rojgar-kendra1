@@ -6,10 +6,15 @@ const BOT_INTRO =
 
 async function getBotResponse(userText, topic = "general") {
   try {
-    const { data } = await axios.post("/api/v1/gpt/career-help", {
-      message: userText,
-      topic,
-    });
+    // ← point directly at your backend on port 5000
+    const url = "http://localhost:5000/api/v1/gpt/career-help";
+
+    const { data } = await axios.post(
+      url,
+      { message: userText, topic },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
     return data.reply || "Hmm, I didn't get a reply from the career coach.";
   } catch (err) {
     console.error("Gemini Error:", err.response?.data || err.message);
@@ -36,28 +41,24 @@ export default function CareerBot() {
     if (!input.trim()) return;
 
     const userMsg = { sender: "user", text: input };
-    const updatedMessages = [...messages, userMsg];
-
-    setMessages(updatedMessages);
+    setMessages(prev => [...prev, userMsg]);
     setInput("");
     setTyping(true);
 
     const botText = await getBotResponse(input);
     console.log("👀 Gemini replied:", botText);
 
-    const botMsg = {
-      sender: "bot",
-      text:
-        botText?.trim().length > 0
-          ? botText
-          : "Gemini didn’t reply clearly. Try asking about resumes or interviews.",
-    };
+    const safeText =
+      botText?.trim().length > 0
+        ? botText
+        : "Gemini didn’t reply clearly. Try asking about resumes or interviews.";
+    const botMsg = { sender: "bot", text: safeText };
 
-    setMessages([...updatedMessages, botMsg]);
+    setMessages(prev => [...prev, botMsg]);
     setTyping(false);
   };
 
-  const handleInputKey = (e) => {
+  const handleInputKey = e => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -71,9 +72,10 @@ export default function CareerBot() {
 
   return (
     <>
+      {/* Floating Button */}
       <button
         className="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen(o => !o)}
         aria-label="Open Career Chatbot"
       >
         <svg
@@ -91,9 +93,11 @@ export default function CareerBot() {
         </svg>
       </button>
 
+      {/* Chat Modal */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-end bg-black bg-opacity-30">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end bg-black bg-opacity-30">
           <div className="w-full max-w-sm md:max-w-md bg-white dark:bg-gray-900 rounded-t-2xl md:rounded-2xl shadow-xl flex flex-col h-[70vh] md:h-[32rem] mx-auto md:mr-12 animate-fadeIn">
+            {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
               <div className="font-bold text-lg text-blue-700 dark:text-blue-300 flex items-center gap-2">
                 <svg
@@ -129,6 +133,7 @@ export default function CareerBot() {
               </div>
             </div>
 
+            {/* Chat History */}
             <div
               ref={chatRef}
               className="flex-1 overflow-y-auto px-4 py-3 space-y-2 bg-gray-50 dark:bg-gray-800"
@@ -168,9 +173,10 @@ export default function CareerBot() {
               )}
             </div>
 
+            {/* Input */}
             <form
               className="p-3 border-t border-gray-200 dark:border-gray-700 flex gap-2 bg-white dark:bg-gray-900"
-              onSubmit={(e) => {
+              onSubmit={e => {
                 e.preventDefault();
                 handleSend();
               }}
@@ -180,7 +186,7 @@ export default function CareerBot() {
                 className="flex-1 rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="Type your question..."
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={e => setInput(e.target.value)}
                 onKeyDown={handleInputKey}
                 autoFocus
               />
