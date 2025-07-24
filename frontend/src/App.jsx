@@ -98,11 +98,7 @@ const appRouter = createBrowserRouter([
   },
   {
     path: "/resume-builder",
-    element: (
-      <ProtectedRoute>
-        <ResumeBuilder />
-      </ProtectedRoute>
-    )
+    element: <ResumeBuilder />, // ✅ Added ResumeBuilder route
   },
 
 ])

@@ -1,19 +1,21 @@
-import axios from "axios"
-import { Link, useNavigate } from "react-router-dom"
-import { AlignJustify, LogOut, UserRound } from "lucide-react"
-import { useDispatch, useSelector } from "react-redux"
-import { toast } from "sonner"
-import { setUser } from "@/redux/authSlice"
+// frontend/src/components/shared/Navbar.jsx
 
-import { Button } from "../ui/button"
-import { Avatar, AvatarImage } from "../ui/avatar"
-import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover"
-import logoImg from "../../assets/logoDarkBG.png"
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { AlignJustify, LogOut, UserRound, FileText } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import { setUser } from "@/redux/authSlice";
+
+import { Button } from "../ui/button";
+import { Avatar, AvatarImage } from "../ui/avatar";
+import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import logoImg from "../../assets/logoDarkBG.png";
 
 const Navbar = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { user } = useSelector(state => state.auth)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector(state => state.auth);
 
   const handleLogOut = async () => {
     try {
@@ -22,22 +24,23 @@ const Navbar = () => {
         {
           withCredentials: true,
         }
-      )
+      );
 
       if (response.status === 200) {
-        dispatch(setUser(null))
-        navigate("/")
-        toast.success(response.data.message)
+        dispatch(setUser(null));
+        navigate("/");
+        toast.success(response.data.message);
       }
     } catch (e) {
-      console.error(e)
-      toast.error(e.response.data.message)
+      console.error(e);
+      toast.error(e.response.data.message);
     }
-  }
+  };
 
   return (
     <div className="bg-darkBlue">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-4 sm:px-6 lg:px-8">
+        {/* Logo */}
         <div>
           <img src={logoImg} alt="logo" width={120} />
         </div>
@@ -91,6 +94,12 @@ const Navbar = () => {
                       >
                         Browse
                       </Link>
+                      <Link
+                        to="/resume-builder"
+                        className="text-sm font-medium hover:text-skyBlue"
+                      >
+                        Resume Builder
+                      </Link>
                     </>
                   )}
                 </div>
@@ -130,14 +139,23 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex flex-col space-y-2">
-                      {user && user.role === "jobSeeker" && (
-                        <Link
-                          to="/profile"
-                          className="flex items-center gap-2 text-sm hover:text-skyBlue"
-                        >
-                          <UserRound size={16} />
-                          View Profile
-                        </Link>
+                      {user?.role === "jobSeeker" && (
+                        <>
+                          <Link
+                            to="/profile"
+                            className="flex items-center gap-2 text-sm hover:text-skyBlue"
+                          >
+                            <UserRound size={16} />
+                            View Profile
+                          </Link>
+                          <Link
+                            to="/resume-builder"
+                            className="flex items-center gap-2 text-sm hover:text-skyBlue"
+                          >
+                            <FileText size={16} />
+                            Resume Builder
+                          </Link>
+                        </>
                       )}
                       <button
                         onClick={handleLogOut}
@@ -177,6 +195,9 @@ const Navbar = () => {
                 <Button variant="link" className="text-aliceBlue">
                   <Link to="/browse">Browse</Link>
                 </Button>
+                <Button variant="link" className="text-aliceBlue">
+                  <Link to="/resume-builder">Resume Builder</Link>
+                </Button>
               </>
             )}
           </ul>
@@ -188,7 +209,6 @@ const Navbar = () => {
                   Log In
                 </Button>
               </Link>
-
               <Link to="/register">
                 <Button variant="secondary">Register</Button>
               </Link>
@@ -216,7 +236,6 @@ const Navbar = () => {
                       }
                     />
                   </Avatar>
-
                   <div>
                     <h4 className="font-medium text-skyBlue">
                       {user?.fullName}
@@ -227,16 +246,23 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col mt-5 ml-4">
-                  {user && user.role === "jobSeeker" && (
-                    <div className="flex items-center w-fit cursor-pointer">
-                      <UserRound />
-                      <Button variant="link">
-                        <Link to="/profile">View Profile</Link>
-                      </Button>
-                    </div>
+                <div className="flex flex-col mt-5 ml-4 space-y-2">
+                  {user?.role === "jobSeeker" && (
+                    <>
+                      <div className="flex items-center w-fit cursor-pointer">
+                        <UserRound />
+                        <Button variant="link">
+                          <Link to="/profile">View Profile</Link>
+                        </Button>
+                      </div>
+                      <div className="flex items-center w-fit cursor-pointer">
+                        <FileText />
+                        <Button variant="link">
+                          <Link to="/resume-builder">Resume Builder</Link>
+                        </Button>
+                      </div>
+                    </>
                   )}
-
                   <div className="flex items-center w-fit cursor-pointer">
                     <LogOut />
                     <Button variant="link" onClick={handleLogOut}>
@@ -250,7 +276,7 @@ const Navbar = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
