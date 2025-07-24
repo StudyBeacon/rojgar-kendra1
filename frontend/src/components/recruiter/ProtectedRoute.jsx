@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
   const { user } = useSelector(state => state.auth)
 
   useEffect(() => {
-    if (!user || user.role !== "jobSeeker") {
+    if (!user || user.role !== "recruiter") {
       toast.warning("You're not allowed to access this route.")
       navigate("/")
     }
