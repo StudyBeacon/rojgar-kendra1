@@ -40,6 +40,10 @@ const jobSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "There must be a creator of the job"],
     },
+    flagged: {
+      type: Boolean,
+      default: false,
+    },
     applications: [
       {
         type: mongoose.Schema.Types.ObjectId,

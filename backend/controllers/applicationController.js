@@ -17,6 +17,10 @@ exports.applyJob = catchAsync(async (req, res, next) => {
   if (!job)
     return next(new AppError(`No such job found with id - ${jobId}`, 404))
 
+  if (job.flagged) {
+    return next(new AppError("This job is under review and cannot be applied to.", 403));
+  }
+
   const existingApplication = await Application.findOne({
     job: jobId,
     applicant: userId,

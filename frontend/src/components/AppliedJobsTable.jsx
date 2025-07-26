@@ -47,10 +47,10 @@ const AppliedJobsTable = () => {
                   {appliedJob.createdAt.split("T")[0]}
                 </TableCell>
                 <TableCell className="whitespace-nowrap px-4 py-2">
-                  {appliedJob.job.title}
+                  {appliedJob.job ? appliedJob.job.title : "Job not found"}
                 </TableCell>
                 <TableCell className="hidden md:table-cell whitespace-nowrap px-4 py-2">
-                  {appliedJob.job.company.companyName}
+                  {appliedJob.job ? (appliedJob.job.company ? appliedJob.job.company.companyName : "No company") : "Job not found"}
                 </TableCell>
                 <TableCell className="text-center whitespace-nowrap px-4 py-2">
                   <Badge

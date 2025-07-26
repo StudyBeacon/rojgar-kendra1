@@ -3,6 +3,7 @@
 const Job = require("../models/jobModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const axios = require('axios');
 
 exports.postJob = catchAsync(async (req, res, next) => {
   const {
@@ -19,6 +20,23 @@ exports.postJob = catchAsync(async (req, res, next) => {
 
   const userId = req.user.id;
 
+  // ML Fake Job Detection
+  let flagged = false;
+  try {
+    const mlRes = await axios.post('http://127.0.0.1:5001/predict', {
+      title,
+      description
+    });
+    // You can adjust the threshold as needed
+    if (mlRes.data.fraudulent === 1 || mlRes.data.probability > 0.3) {
+      flagged = true;
+    }
+  } catch (err) {
+    // If ML API fails, you can choose to proceed or block
+    console.error('ML API error:', err.message);
+  }
+
+  // Add flagged field to the job
   const newJob = await Job.create({
     title,
     description,
@@ -30,6 +48,7 @@ exports.postJob = catchAsync(async (req, res, next) => {
     experienceLevel,
     company,
     createdBy: userId,
+    flagged // <-- add this field to your Job model/schema
   });
 
   res.status(201).json({
@@ -43,6 +62,7 @@ exports.getAllJobs = catchAsync(async (req, res, next) => {
   const keyword = req.query.keyword || "";
 
   const query = {
+    flagged: false,
     $or: [
       { title: { $regex: keyword, $options: "i" } },
       { description: { $regex: keyword, $options: "i" } },
