@@ -1,0 +1,15 @@
+nohup: ignoring input
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5002
+ * Running on http://192.168.1.130:5002
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 624-696-047
+127.0.0.1 - - [28/Jul/2025 21:22:49] "POST /score HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jul/2025 21:24:08] "POST /score HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jul/2025 21:26:14] "POST /score HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jul/2025 21:27:44] "POST /score HTTP/1.1" 200 -

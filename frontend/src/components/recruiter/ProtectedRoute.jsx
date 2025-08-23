@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
-const tedRoute = ({ children }) => {
+const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate()
   const { user } = useSelector(state => state.auth)
 
@@ -17,4 +17,4 @@ const tedRoute = ({ children }) => {
   return <>{children}</>
 }
 
-export default tedRoute
+export default ProtectedRoute

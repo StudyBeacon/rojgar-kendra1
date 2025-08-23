@@ -3,7 +3,7 @@ import { toast } from "sonner"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { setLoading, setUser } from "@/redux/authSlice"
-import { Loader } from "lucide-react"
+import { Loader, Eye, EyeOff } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import logoImg from "../../assets/logoLightBG.png"
@@ -27,15 +27,27 @@ const Register = () => {
     file: "",
   })
 
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
   const changeEventHandler = e => {
     setFormInputs({ ...formInputs, [e.target.name]: e.target.value })
   }
+  
   const handleValueChange = value => {
     setFormInputs({ ...formInputs, ["role"]: value })
   }
 
   const changeFileHandler = e => {
     setFormInputs({ ...formInputs, file: e.target.files?.[0] })
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword)
   }
 
   const formSubmitHandler = async e => {
@@ -129,26 +141,56 @@ const Register = () => {
         <div className="my-3">
           <Label className="block mb-1">
             Password
-            <Input
-              type="password"
-              value={formInputs.password}
-              name="password"
-              onChange={changeEventHandler}
-              className="mt-1 w-full"
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={formInputs.password}
+                name="password"
+                onChange={changeEventHandler}
+                placeholder="Enter your password"
+                className="mt-1 w-full pr-10"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </Label>
         </div>
 
         <div className="my-3">
           <Label className="block mb-1">
             Confirm Password
-            <Input
-              type="password"
-              value={formInputs.passwordConfirm}
-              name="passwordConfirm"
-              onChange={changeEventHandler}
-              className="mt-1 w-full"
-            />
+            <div className="relative">
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                value={formInputs.passwordConfirm}
+                name="passwordConfirm"
+                onChange={changeEventHandler}
+                placeholder="Confirm your password"
+                className="mt-1 w-full pr-10"
+              />
+              <button
+                type="button"
+                onClick={toggleConfirmPasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition-colors"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </Label>
         </div>
 

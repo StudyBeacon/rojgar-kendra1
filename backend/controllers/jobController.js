@@ -44,8 +44,8 @@ exports.postJob = catchAsync(async (req, res, next) => {
     salary: Number(salary),
     location,
     jobType,
-    positions,
-    experienceLevel,
+    positions: Number(positions),
+    experienceLevel: Number(experienceLevel),
     company,
     createdBy: userId,
     flagged // <-- add this field to your Job model/schema

@@ -2,7 +2,7 @@ const express = require("express")
 
 const companyController = require("../controllers/companyController")
 const isAuthenticated = require("../middlewares/isAuthenticated")
-const singleUpload = require("../middlewares/multer")
+const { singleUpload } = require("../middlewares/multer")
 
 const router = express.Router()
 

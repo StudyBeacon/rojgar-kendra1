@@ -36,6 +36,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
+
 // your existing routes
 app.use("/api/v1/user",        userRouter);
 app.use("/api/v1/company",     companyRouter);

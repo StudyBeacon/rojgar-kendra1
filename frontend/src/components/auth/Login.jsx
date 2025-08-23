@@ -1,7 +1,7 @@
 import axios from "axios"
 import { toast } from "sonner"
 import { useEffect, useState } from "react"
-import { Loader } from "lucide-react"
+import { Loader, Eye, EyeOff } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -23,11 +23,18 @@ const Login = () => {
     role: "jobSeeker",
   })
 
+  const [showPassword, setShowPassword] = useState(false)
+
   const changeEventHandler = e => {
     setFormInputs({ ...formInputs, [e.target.name]: e.target.value })
   }
+  
   const handleValueChange = value => {
     setFormInputs({ ...formInputs, ["role"]: value })
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
   }
 
   const formSubmitHandler = async e => {
@@ -104,13 +111,28 @@ const Login = () => {
         <div className="my-3">
           <Label className="block mb-1">
             Password
-            <Input
-              type="password"
-              value={formInputs.passwordConfirm}
-              name="password"
-              onChange={changeEventHandler}
-              className="mt-1 w-full"
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={formInputs.password}
+                name="password"
+                onChange={changeEventHandler}
+                placeholder="Enter your password"
+                className="mt-1 w-full pr-10"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </Label>
         </div>
 

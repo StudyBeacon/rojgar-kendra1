@@ -1,0 +1,15 @@
+
+> backend@1.0.0 dev
+> nodemon server.js
+
+[33m[nodemon] 3.1.7[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node server.js`[39m
+Server running at port 5000
+DB connection established successfully!
+[0mGET /api/v1/job/my-jobs [36m304[0m 58.044 ms - -[0m
+[0mGET /api/v1/job/my-jobs [32m200[0m 45.248 ms - 978[0m
+[0mOPTIONS /api/v1/job/68a9f44f0ec0d88590451137 [32m204[0m 0.560 ms - 0[0m
+[0mDELETE /api/v1/job/68a9f44f0ec0d88590451137 [32m200[0m 9.980 ms - 57[0m

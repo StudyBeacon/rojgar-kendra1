@@ -52,7 +52,7 @@ const appRouter = createBrowserRouter([
     path: "/my-companies",
     element: (
       <ProtectedRoute>
-        <Companies />,
+        <Companies />
       </ProtectedRoute>
     ),
   },
@@ -60,7 +60,7 @@ const appRouter = createBrowserRouter([
     path: "/register-company",
     element: (
       <ProtectedRoute>
-        <CompanyCreate />,
+        <CompanyCreate />
       </ProtectedRoute>
     ),
   },
@@ -100,7 +100,10 @@ const appRouter = createBrowserRouter([
     path: "/resume-builder",
     element: <ResumeBuilder />, // ✅ Added ResumeBuilder route
   },
-
+  {
+    path: "*",
+    element: <Home />, // Redirect to home for any unmatched routes
+  },
 ])
 
 function App() {

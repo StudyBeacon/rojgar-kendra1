@@ -1,51 +1,41 @@
 import axios from "axios"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
 
 import Navbar from "../shared/Navbar"
-import ApplicationsTable from "./ApplicationsTable"
-import { setApplicants } from "@/redux/applicationSlice"
+import EnhancedApplicantsTable from "./EnhancedApplicantsTable"
 
 const Applicants = () => {
   const { jobId } = useParams()
-  const dispatch = useDispatch()
-
-  const { applicants } = useSelector(state => state.application)
+  const [jobTitle, setJobTitle] = useState("")
 
   useEffect(() => {
-    const fetchAllApplicants = async () => {
+    const fetchJobDetails = async () => {
       try {
         const response = await axios.get(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/api/v1/application/${jobId}/applicants`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/job/${jobId}`,
           {
-            withCredentials: true,
+            withCredentials: true
           }
         )
 
         if (response.status === 200) {
-          const { data } = response.data
-          dispatch(setApplicants(data.applications))
+          setJobTitle(response.data.data.job.title)
         }
-      } catch (e) {
-        console.error(e)
-        dispatch(setApplicants([]))
+      } catch (error) {
+        console.error('Error fetching job details:', error)
+        setJobTitle("Job")
       }
     }
 
-    fetchAllApplicants()
-  }, [])
+    fetchJobDetails()
+  }, [jobId])
 
   return (
     <div>
       <Navbar />
-      <div className="max-w-7xl mx-auto my-16">
-        <h1 className="font-bold text-xl my-10 text-darkBlue">
-          Applicants ({applicants?.length})
-        </h1>
-        <ApplicationsTable />
+      <div className="max-w-7xl mx-auto my-16 px-4">
+        <EnhancedApplicantsTable jobId={jobId} jobTitle={jobTitle} />
       </div>
     </div>
   )

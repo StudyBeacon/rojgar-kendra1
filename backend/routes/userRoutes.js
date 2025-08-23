@@ -1,7 +1,7 @@
 const express = require("express")
 const authController = require("../controllers/authController")
 const isAuthenticated = require("../middlewares/isAuthenticated")
-const singleUpload = require("../middlewares/multer")
+const { singleUpload } = require("../middlewares/multer")
 
 const router = express.Router()
 

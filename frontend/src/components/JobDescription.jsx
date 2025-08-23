@@ -6,8 +6,10 @@ import { toast } from "sonner"
 
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
 import { setSingleJob } from "@/redux/jobSlice"
 import Navbar from "./shared/Navbar"
+import JobApplicationForm from "./JobApplicationForm"
 
 const JobDescription = () => {
   const { jobId } = useParams()
@@ -20,31 +22,23 @@ const JobDescription = () => {
     application => application?.applicant === user?._id
   )
   const [isApplied, setIsApplied] = useState(isInitiallyApplied)
+  const [showApplicationForm, setShowApplicationForm] = useState(false)
 
-  const applyJobHandler = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/application/apply/${jobId}`,
-        {
-          withCredentials: true,
-        }
-      )
+  const handleApplyClick = () => {
+    setShowApplicationForm(true)
+  }
 
-      if (response.status === 201) {
-        setIsApplied(true)
+  const handleApplicationSuccess = (newApplication) => {
+    setShowApplicationForm(false)
+    setIsApplied(true)
 
-        const updatedSingleJob = {
-          ...singleJob,
-          applications: [...singleJob.applications, { applicant: user?._id }],
-        }
-        dispatch(setSingleJob(updatedSingleJob))
-
-        toast.success(response.data.message)
-      }
-    } catch (e) {
-      console.error(e)
-      toast.error(e.response.data.message)
+    const updatedSingleJob = {
+      ...singleJob,
+      applications: [...singleJob.applications, { applicant: user?._id }],
     }
+    dispatch(setSingleJob(updatedSingleJob))
+
+    toast.success("Application submitted successfully!")
   }
 
   useEffect(() => {
@@ -109,7 +103,7 @@ const JobDescription = () => {
             </div>
 
             <Button
-              onClick={isApplied ? null : applyJobHandler}
+              onClick={isApplied ? null : handleApplyClick}
               disabled={isApplied}
               className={`w-full sm:w-auto rounded-lg ${
                 isApplied
@@ -179,6 +173,21 @@ const JobDescription = () => {
           </div>
         </div>
       </div>
+
+      {/* Application Form Dialog */}
+      <Dialog open={showApplicationForm} onOpenChange={setShowApplicationForm}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Apply for {singleJob?.title}</DialogTitle>
+          </DialogHeader>
+          <JobApplicationForm
+            jobId={jobId}
+            jobTitle={singleJob?.title}
+            onSuccess={handleApplicationSuccess}
+            onCancel={() => setShowApplicationForm(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

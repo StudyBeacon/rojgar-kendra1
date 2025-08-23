@@ -12,19 +12,47 @@ const applicationSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "A job application must have an applicant"],
     },
+    // Resume upload fields
+    resumeUrl: {
+      type: String,
+      required: [true, "Resume URL is required"],
+    },
+    resumeText: {
+      type: String,
+      required: [true, "Parsed resume text is required"],
+    },
+    // ML matching fields
+    matchScore: {
+      type: Number,
+      min: 0,
+      max: 100,
+      required: [true, "Match score is required"],
+    },
+    isMatch: {
+      type: Boolean,
+      default: false,
+    },
+    extractedSkills: [String],
+    extractedExperience: {
+      type: String,
+      default: "",
+    },
     status: {
       type: String,
       enum: {
-        values: ["pending", "accepted", "rejected"],
-        message: "Status is either: pending, accepted or rejected",
+        values: ["applied", "shortlisted", "rejected"],
+        message: "Status is either: applied, shortlisted or rejected",
       },
-      default: "pending",
+      default: "applied",
     },
   },
   {
     timestamps: true,
   }
 )
+
+// Prevent duplicate applications for the same job by the same applicant
+applicationSchema.index({ job: 1, applicant: 1 }, { unique: true })
 
 const Application = mongoose.model("Application", applicationSchema)
 
